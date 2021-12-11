@@ -25,7 +25,7 @@ class Order(BaseModel):
         :return: bool
         """
         delivery_free_of_charge_amount = 10000
-        if self.cart_value > delivery_free_of_charge_amount:
+        if self.cart_value >= delivery_free_of_charge_amount:
             return True
 
     def is_rush_time(self) -> bool:

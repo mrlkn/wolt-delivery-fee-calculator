@@ -16,7 +16,7 @@ def calculate_distance_fee(order_distance: int) -> int:
     return cost_ratio
 
 
-def calculate_item_fee(items_in_order: int) -> float:
+def calculate_item_fee(order_items: int) -> float:
     """
     Calculates the fee based on the item in order with a mathematical solution.
 
@@ -24,15 +24,15 @@ def calculate_item_fee(items_in_order: int) -> float:
     which is equal of dividing the item count by 2.
     i.e. there are 7 items and 3 of them is excessive. 3/2 is equal of 1.5 Euro fee.
 
-    :param items_in_order: integer items of the order
+    :param order_items: integer items of the order
     :return: surplus fee of the items
     """
     free_of_charge_item = 4
 
-    if items_in_order <= free_of_charge_item:
+    if order_items <= free_of_charge_item:
         return 0
 
-    excessive_item_count = items_in_order - free_of_charge_item
+    excessive_item_count = order_items - free_of_charge_item
 
     fee = excessive_item_count / 2
     return fee
@@ -60,3 +60,13 @@ def calculate_cart_value_fee(cart_value: int) -> float:
     fee_in_euros = fee / 100
 
     return fee_in_euros
+
+
+def calculate_total_delivery_fee(order_distance: int, order_items: int, order_value: int):
+    delivery_fee = 0
+
+    delivery_fee += calculate_distance_fee(order_distance)
+    delivery_fee += calculate_item_fee(order_items)
+    delivery_fee += calculate_cart_value_fee(order_value)
+
+    return delivery_fee
