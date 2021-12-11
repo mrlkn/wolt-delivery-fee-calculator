@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+    app:
+        image: 'wolt-df'
+        ports:
+          - "8080:8080"
+        build:
+          context: .
+          dockerfile: ./build/Dockerfile
+        volumes:
+          - ./app:/app
