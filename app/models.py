@@ -43,8 +43,8 @@ class Order(BaseModel):
 class ResponseModel(BaseModel):
     """
     Basic response model to return delivery fee in cents.
-    Delivery Fee can not be lower than 0 and can not be greater than 1500 (maximum_delivery_fee).
+    Delivery Fee can not be lower than 0 (base_delivery_fee) and can not be greater than 1500 (maximum_delivery_fee).
     """
-    delivery_fee: confloat(ge=0, le=delivery_conf.maximum_delivery_fee) = Field(
+    delivery_fee: confloat(ge=delivery_conf.base_delivery_fee, le=delivery_conf.maximum_delivery_fee) = Field(
         description="Calculated delivery fee in cents."
     )

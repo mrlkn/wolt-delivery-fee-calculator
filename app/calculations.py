@@ -56,7 +56,7 @@ def calculate_cart_value_fee(cart_value: int) -> float:
     """
 
     if cart_value > delivery_conf.cart_value_to_fulfill:
-        return delivery_conf.base_delivery_fee
+        return 0
 
     fee = delivery_conf.cart_value_to_fulfill - cart_value
 
