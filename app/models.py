@@ -36,7 +36,7 @@ class Order(BaseModel):
 
         :return: bool
         """
-        if self.time.weekday() == 4 and 15 >= self.time.hour >= 19:
+        if self.time.weekday() == 4 and 15 <= self.time.hour <= 19:
             return True
 
 
