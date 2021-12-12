@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field, PositiveInt, confloat
+from pydantic import BaseModel, Field, PositiveInt, conint
 
 from config import delivery_conf
 
@@ -45,6 +45,6 @@ class ResponseModel(BaseModel):
     Basic response model to return delivery fee in cents.
     Delivery Fee can not be lower than 0 (base_delivery_fee) and can not be greater than 1500 (maximum_delivery_fee).
     """
-    delivery_fee: confloat(ge=delivery_conf.base_delivery_fee, le=delivery_conf.maximum_delivery_fee) = Field(
+    delivery_fee: conint(ge=delivery_conf.base_delivery_fee, le=delivery_conf.maximum_delivery_fee) = Field(
         description="Calculated delivery fee in cents."
     )

@@ -42,7 +42,7 @@ def calculate_item_fee(order_items: int) -> int:
     return fee
 
 
-def calculate_cart_value_fee(cart_value: int) -> float:
+def calculate_cart_value_fee(cart_value: int) -> int:
     """
     Calculates the fee based on the cart value.
 
