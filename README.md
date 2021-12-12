@@ -35,9 +35,11 @@ Application is also [mypy](http://mypy-lang.org/) compliant. After attaching to 
 
 ## Tests
 
-WIP
+Added pytest and can be checked with `python -m pytest tests.py`
 
-## Finally, the code itself and note from dev
+## Note from dev
 
-As you stated in document for not building production quality code,
+As it stated in document for not building production quality code,
 I didn't bother to add views etc. Just created the endpoint in the main.py
+
+Apart from it, in order to improve maintability I added delivery configuration to configure all the parameters in same place that plays role in delivery fee. However, it felt like code became more obscure (especially with bad namings) and I couldn't balace it well. So I am not sure if that was the best practice so any feedback is appreciated at this point.
