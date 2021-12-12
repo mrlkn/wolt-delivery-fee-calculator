@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, PositiveInt, confloat
 
+from config import delivery_conf
+
 
 class Order(BaseModel):
     """
@@ -20,12 +22,12 @@ class Order(BaseModel):
 
     def is_free_of_delivery_fee(self) -> bool:
         """
-        Returns True if cart value is equal or higher than 100 Euro which means it is free of delivery fee.
+        Returns True if cart value is equal or higher than 10000 (free_of_charge_value).
+        Which means it is free to deliver.
 
         :return: bool
         """
-        delivery_free_of_charge_amount = 10000
-        if self.cart_value >= delivery_free_of_charge_amount:
+        if self.cart_value >= delivery_conf.free_of_charge_cart_value:
             return True
 
     def is_rush_time(self) -> bool:
@@ -40,8 +42,9 @@ class Order(BaseModel):
 
 class ResponseModel(BaseModel):
     """
-    Basic response model to return delivery fee. Delivery Fee can not be less than 0 and can not be greater than 15.
+    Basic response model to return delivery fee in cents.
+    Delivery Fee can not be lower than 0 and can not be greater than 1500 (maximum_delivery_fee).
     """
-    delivery_fee: confloat(ge=0, le=15) = Field(
+    delivery_fee: confloat(ge=0, le=delivery_conf.maximum_delivery_fee) = Field(
         description="Calculated delivery fee in cents."
     )
