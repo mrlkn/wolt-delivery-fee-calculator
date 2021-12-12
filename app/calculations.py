@@ -1,40 +1,44 @@
+from config import delivery_conf
+
+
 def calculate_distance_fee(order_distance: int) -> int:
     """
     Calculates the fee based on the distance in order with a mathematical solution.
 
-    Calculating how many 500 meters are there in the total distance and rounding it up the one higher integer.
-    i.e. 1501/500 is 3.002 and fee should be 4 Euro so we are rounding it up.
-    However, the minimum fee is 2 Euros so if we have cost_ratio lower than two we should return two anyways.
+    Calculating how many 500 (distance_to_charge) meters are there in order distance and rounding it up the one
+    higher integer then converts it to the cents by multiplying it with 100.
+    i.e. 1501/500 is 3.002 and fee should be 4 Euro so we are rounding it up to 4 and multiplying to get 400 cents.
+    However, if the calculation is lower than the minimum_distance_fee we should return it anyways.
 
     :param order_distance: integer distance of the order
     :return: fee of the distance
     """
-    cost_ratio = int((order_distance / 500) + (order_distance % 5 > 0))
+    delivery_fee = int((order_distance / delivery_conf.distance_to_charge) + (order_distance % 5 > 0)) * 100
 
-    if cost_ratio <= 2:
-        return 2
-    return cost_ratio
+    if delivery_fee <= delivery_conf.minimum_distance_fee:
+        return delivery_conf.minimum_distance_fee
+
+    return delivery_fee
 
 
-def calculate_item_fee(order_items: int) -> float:
+def calculate_item_fee(order_items: int) -> int:
     """
     Calculates the fee based on the item in order with a mathematical solution.
 
-    If there are less or equal item than 4 there is no fee. For each item that are more than 4, we are adding 50 cents
-    which is equal of dividing the item count by 2.
-    i.e. there are 7 items and 3 of them is excessive. 3/2 is equal of 1.5 Euro fee.
+    If there are less or equal item than 4 (charge_free_item_count) there is no fee. For each item that are more than 4,
+    we are adding 50 cents.
+    i.e. there are 7 items and 3 of them is excessive. 4 * 50 = 200 cents
 
     :param order_items: integer items of the order
     :return: surplus fee of the items
     """
-    free_of_charge_item = 4
 
-    if order_items <= free_of_charge_item:
+    if order_items <= delivery_conf.charge_free_item_count:
         return 0
 
-    excessive_item_count = order_items - free_of_charge_item
+    excessive_item_count = order_items - delivery_conf.charge_free_item_count
 
-    fee = excessive_item_count / 2
+    fee = excessive_item_count * 50
     return fee
 
 
@@ -42,28 +46,33 @@ def calculate_cart_value_fee(cart_value: int) -> float:
     """
     Calculates the fee based on the cart value.
 
-    If cart value is higher than 10 euros (1000 cents) there is no delivery fee. However, if the cart value is lower
-    than it cart value is rounded up to 10 with fee included.
+    If cart value is higher than 1000 cents(cart_value_to_fulfill) there is no delivery fee.
+    However, if the cart value is lower than it cart value must be fulfill to it with delivery fee included.
     i.e. cart value is 790 so we round it up to 1000 with 110 as a delivery fee. Then finally converts it to euros by
     dividing it to 10.
 
     :param cart_value: integer cart value of the order
     :return: fee that rounds the cart value to the 10
     """
-    fee = 0
-    free_of_charge = 1000
 
-    if cart_value > free_of_charge:
-        return fee
+    if cart_value > delivery_conf.cart_value_to_fulfill:
+        return delivery_conf.base_delivery_fee
 
-    fee = free_of_charge - cart_value
-    fee_in_euros = fee / 100
+    fee = delivery_conf.cart_value_to_fulfill - cart_value
 
-    return fee_in_euros
+    return fee
 
 
-def calculate_total_delivery_fee(order_distance: int, order_items: int, order_value: int):
-    delivery_fee = 0
+def calculate_total_delivery_fee(order_distance: int, order_items: int, order_value: int) -> int:
+    """
+    Calculate the total amount of delivery fee with the given parameters.
+
+    :param order_distance: integer of order distance in meters
+    :param order_items: integer of item count of the order
+    :param order_value: integer of the value of cart
+    :return: total delivery fee
+    """
+    delivery_fee = delivery_conf.base_delivery_fee
 
     delivery_fee += calculate_distance_fee(order_distance)
     delivery_fee += calculate_item_fee(order_items)
