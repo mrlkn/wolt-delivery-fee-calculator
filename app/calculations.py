@@ -48,11 +48,10 @@ def calculate_cart_value_fee(cart_value: int) -> int:
 
     If cart value is higher than 1000 cents(cart_value_to_fulfill) there is no delivery fee.
     However, if the cart value is lower than it cart value must be fulfill to it with delivery fee included.
-    i.e. cart value is 790 so we round it up to 1000 with 110 as a delivery fee. Then finally converts it to euros by
-    dividing it to 10.
+    i.e. cart value is 790 so we round it up to 1000 with 110 as a delivery fee.
 
     :param cart_value: integer cart value of the order
-    :return: fee that rounds the cart value to the 10
+    :return: fee that rounds the cart value to the 1000
     """
 
     if cart_value > delivery_conf.cart_value_to_fulfill:
